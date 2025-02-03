@@ -1,14 +1,18 @@
 #ifndef RENDERWINDOW_H
 #define RENDERWINDOW_H
 
+#include "vktriangle.h"
+#include "vktrianglesurface.h"
+#include "vkgraph.h"
 #include <QVulkanWindow>
+#include <string>
 
 class RenderWindow : public QVulkanWindowRenderer
 {
 public:
     RenderWindow(QVulkanWindow *w, bool msaa = false);
 
-    //Initializes the Vulkan resources needed,
+    //Initializes the Vulkan resources needed,W
     // the buffers
     // vertex descriptions for the shaders
     // making the shaders, etc
@@ -35,8 +39,6 @@ protected:
     //Creates the Vulkan shader module from the precompiled shader files in .spv format
     VkShaderModule createShader(const QString &name);
 
-	void setModelMatrix(QMatrix4x4 modelMatrix);
-
     //The ModelViewProjection MVP matrix
     QMatrix4x4 mProjectionMatrix;
     //Rotation angle of the triangle
@@ -56,6 +58,22 @@ protected:
     VkPipelineCache mPipelineCache{ VK_NULL_HANDLE };
     VkPipelineLayout mPipelineLayout{ VK_NULL_HANDLE };
     VkPipeline mPipeline{ VK_NULL_HANDLE };
+
+private:
+    const std::string filename = "../../example2.txt";
+    VkTriangle mTriangle;
+    VkTriangleSurface mSurface;
+    VkGraph mGraph;
+    VisualObject mVisualObject;
+    std::vector<VisualObject*> mObjects;
+
+
+    void createBuffer(VkDevice logicalDevice,
+                      const VkDeviceSize uniAlign, VisualObject* visualObject,
+                      VkBufferUsageFlags usage=VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
+    void setModelMatrix(QMatrix4x4 modelMatrix);
+
+
 };
 
 #endif // RENDERWINDOW_H
